@@ -5,4 +5,4 @@ def test := 42
 #print test
 
 --- Comment
-def newVar := True
+def oldVar := false
