@@ -24,6 +24,3 @@ theorem predecessor : Primrec (Nat.pred) := by
   have tmp := predecessor'
   rw [Nat.Primrec'.prim_iff₁] at tmp
   exact tmp
-
-#check Vector ℕ 1
--- convert between vec of length 1 and ℕ 
