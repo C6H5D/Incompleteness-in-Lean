@@ -22,3 +22,15 @@ inductive Arithmetic.Relations : Type
 
 protected def arithmetic : Language :=
   Language.mk₂ Arithmetic.Constants Arithmetic.UnaryFunctions Arithmetic.BinaryFunctions Empty Arithmetic.Relations
+
+#check Language.Structure.mk₂
+
+def true_arithmetic : Language.arithmetic.Structure ℕ := by
+  apply Language.Structure.mk₂
+  <;> intro a
+  <;> cases' a
+  . exact 0
+  . exact Nat.succ
+  . exact Nat.add
+  . exact Nat.mul
+  . exact Nat.le
