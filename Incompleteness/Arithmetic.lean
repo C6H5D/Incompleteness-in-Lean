@@ -91,6 +91,25 @@ infix:50 " ≥' " => (fun t u => (u ≤' t))
 
 infix:50 " >' " => (fun t u => (u <' t))
 
+----------- Bounded quantifier: use macro for bq; check Delta_0 by asking for a proof
+
+open Std.ExtendedBinder
+open Lean
+
+syntax "∃' " binderIdent " <' " binderIdent ", " term : term
+
+macro_rules
+  | `(∃' $_:ident <' $y:ident, $p) =>
+    `(∃' ((&0 <' $y:ident) ⊓ $p))
+
+def test : BoundedArithmeticFormula 2 := (&0 =' ArithmeticTerm.ofNat 11) ⊓ (&1 =' ArithmeticTerm.ofNat 17)
+def eleven : BoundedArithmeticTerm 2 := &1
+def test1 := ∃' test ⊓ (&0 ≠' &0)
+def test2 := ∃' x <' eleven, test
+#print test2
+
+
+
 -----------------Recall from ModelTheory.Syntax:-----------------
 
 -- prefix:arg "&" => FirstOrder.Language.Term.var ∘ Sum.inr
