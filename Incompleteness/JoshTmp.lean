@@ -15,20 +15,26 @@ variable (φ : BoundedFormula L_arithmetic ℕ 2)
 
 
 theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partrec f} :
-        ∃ φ : BoundedFormula L_arithmetic ℕ 2, φ.IsQF ∧ ∀ m n : ℕ, BoundedFormula.Realize φ m n ↔ (f m = n) := by
+        ∃ φ : BoundedFormula L_arithmetic ℕ 2, φ.IsQF ∧ ∀ m n : ℕ, (@BoundedFormula.Realize L_arithmetic ℕ true_arithmetic ℕ 2 φ default (fun x => by 
+    induction x.val
+    exact m
+    exact n)) ↔ (f m = n) := by
     induction hf with
     | zero => sorry
     | succ => sorry
     | left => sorry
     | right => sorry
-    | pair f g _ _ _ _ => sorry
-    | comp f g _ _ _ _ => sorry
-    | prec f g _ _ _ _ => sorry
-    | rfind f _ _ => sorry
+    | pair f g _ _ => sorry
+    | comp f g _ _=> sorry
+    | prec f g _ _ => sorry
+    | rfind f _ => sorry
     
 
 
 #check BoundedFormula
-#check φ.Realize
+-- #check φ.Realize
 
-#check @BoundedFormula.Realize 
+#check BoundedFormula.Realize φ default (fun n => by 
+    induction n.val
+    exact 0
+    exact 1)

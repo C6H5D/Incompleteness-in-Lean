@@ -36,7 +36,7 @@ protected def times : (Arithmetic.L_arithmetic.Functions 2) := BinaryFunctions.t
 
 protected def le : (Arithmetic.L_arithmetic.Relations 2) := Relations.le
  
-def true_arithmetic : Arithmetic.L_arithmetic.Structure ℕ := by
+instance true_arithmetic : Arithmetic.L_arithmetic.Structure ℕ := by
   apply Language.Structure.mk₂
   <;> intro a
   <;> cases' a
