@@ -65,7 +65,7 @@ def BoundedArithmeticTerm (n : ℕ) :=
 def ArithmeticTerm := BoundedArithmeticTerm 0
 
 -- Operation Simplifications
-def ArithmeticTerm.ofNat (n : ℕ) : ArithmeticTerm := by 
+def ArithmeticTerm.ofNat {l : ℕ} (n : ℕ) : BoundedArithmeticTerm l := by 
   induction' n with _ IH
   . exact Constants.term Arithmetic.zero
   . exact Functions.apply₁ Arithmetic.succ IH
@@ -73,7 +73,7 @@ def ArithmeticTerm.ofNat (n : ℕ) : ArithmeticTerm := by
 instance : Coe ℕ ArithmeticTerm where
   coe := ArithmeticTerm.ofNat
 
-attribute [coe] ArithmeticTerm.ofNat -- TODO what does this do?
+attribute [coe] ArithmeticTerm.ofNat
 
 prefix:max " succ' "  => (fun t => Functions.apply₁ Arithmetic.succ t)
 
