@@ -83,6 +83,14 @@ infixl:70 " ⬝' " => (fun t u => Functions.apply₂ Arithmetic.times t u)
 
 infix:50 " ≤' " => (fun t u => Relations.boundedFormula₂ Arithmetic.le t u)
 
+infix:50 " ≠' " => (fun t u => ∼ (t =' u))
+
+infix:50 " <' " => (fun t u => (t ≤' u) ⊓ (t ≠' u))
+
+infix:50 " ≥' " => (fun t u => (u ≤' t))
+
+infix:50 " >' " => (fun t u => (u <' t))
+
 -----------------Recall from ModelTheory.Syntax:-----------------
 
 -- prefix:arg "&" => FirstOrder.Language.Term.var ∘ Sum.inr
