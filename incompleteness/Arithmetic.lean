@@ -65,12 +65,13 @@ def BoundedArithmeticTerm (n : ℕ) :=
 def ArithmeticTerm := BoundedArithmeticTerm 0
 
 -- Operation Simplifications
+def ArithmeticTerm.ofNat (n : ℕ) : ArithmeticTerm := by 
+  induction' n with _ IH
+  . exact Constants.term Arithmetic.zero
+  . exact Functions.apply₁ Arithmetic.succ IH
+
 instance : Coe ℕ ArithmeticTerm where
-  coe := by
-    intro n
-    induction' n with _ IH
-    . exact Constants.term Arithmetic.zero
-    . exact Functions.apply₁ Arithmetic.succ IH
+  coe := ArithmeticTerm.ofNat
 
 -----------------Recall from ModelTheory.Syntax:-----------------
 

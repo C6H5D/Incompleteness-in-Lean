@@ -44,8 +44,6 @@ example : Prop := by
   have f_ex := f2.ex
   have qf_imp := QFFormula.imp qf_rel qf_rel
 
-  have n := 1 + 1
-
   exact True
 
 
@@ -65,6 +63,7 @@ def q0 : BoundedArithmeticFormula 1 := (x0 =' x0)
 def pq : ArithmeticFormula := ∃' q0
 
 def zero_term : ArithmeticTerm := Constants.term Arithmetic.zero
+def n : ArithmeticTerm := (0:ℕ) 
 
 #check BoundedFormula.IsQF
 example : (BoundedFormula.IsQF p0) := by
