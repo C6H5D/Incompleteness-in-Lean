@@ -79,3 +79,14 @@ example : (BoundedFormula.IsQF p0) := by
   apply BoundedFormula.IsQF.of_isAtomic
   apply BoundedFormula.IsAtomic.equal
 
+
+
+#eval Decidable.decide (∃ m < 10, ∀ n < m, n = n)
+#synth Decidable (∃ m<10, ∀ n<m, n=n)
+
+#check ∃ m < 10, ∀ n < n + 1, n = n
+
+example : ∃ m<10, ∀ n<m, n=n := by decide
+#check of_decide_eq_true
+-- TODO bq impl in Nat
+-- simpa using h. <=> simp at h; assumption
