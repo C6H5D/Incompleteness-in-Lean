@@ -63,7 +63,11 @@ def q0 : BoundedArithmeticFormula 1 := (x0 =' x0)
 def pq : ArithmeticFormula := ∃' q0
 
 def zero_term : ArithmeticTerm := Constants.term Arithmetic.zero
-def n : ArithmeticTerm := (0:ℕ) 
+def z: ArithmeticTerm := (0:ℕ)
+def one : ArithmeticTerm := succ' z
+def two : ArithmeticTerm := one +' one
+def four := two ⬝' two
+def one_le_four := one ≤' four
 
 #check BoundedFormula.IsQF
 example : (BoundedFormula.IsQF p0) := by
