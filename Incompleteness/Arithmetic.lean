@@ -35,7 +35,7 @@ protected def plus : (Arithmetic.L_arithmetic.Functions 2) := BinaryFunctions.pl
 protected def times : (Arithmetic.L_arithmetic.Functions 2) := BinaryFunctions.times
 
 protected def le : (Arithmetic.L_arithmetic.Relations 2) := Relations.le
-
+ 
 def true_arithmetic : Arithmetic.L_arithmetic.Structure ℕ := by
   apply Language.Structure.mk₂
   <;> intro a
