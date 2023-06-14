@@ -15,7 +15,7 @@ variable (φ : BoundedFormula L_arithmetic ℕ 2)
 
 
 theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partrec f} :
-        ∃ φ : BoundedFormula L_arithmetic ℕ 2, φ.IsQF ∧ ∀ m n : ℕ, (@BoundedFormula.Realize L_arithmetic ℕ true_arithmetic ℕ 2 φ default (fun x => by 
+        ∃ φ : BoundedFormula L_arithmetic ℕ 2, φ.IsQF ∧ ∀ m n : ℕ, (BoundedFormula.Realize φ default (fun x => by 
     induction x.val
     exact m
     exact n)) ↔ (f m = n) := by
