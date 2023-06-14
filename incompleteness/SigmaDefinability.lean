@@ -69,6 +69,10 @@ def two : ArithmeticTerm := one +' one
 def four := two ⬝' two
 def one_le_four := one ≤' four
 def ten_eq_zero := (10:ℕ) =' z
+def one_ne_four := one ≠' four
+def one_lt_four := one <' four
+def one_ge_four := one ≥' four
+def one_gt_four := one >' four
 
 -- #check BoundedFormula.IsQF
 example : (BoundedFormula.IsQF p0) := by
