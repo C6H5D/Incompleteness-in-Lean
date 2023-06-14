@@ -69,7 +69,7 @@ def two : ArithmeticTerm := one +' one
 def four := two ⬝' two
 def one_le_four := one ≤' four
 
-#check BoundedFormula.IsQF
+-- #check BoundedFormula.IsQF
 example : (BoundedFormula.IsQF p0) := by
   apply BoundedFormula.IsQF.of_isAtomic
   apply BoundedFormula.IsAtomic.equal
