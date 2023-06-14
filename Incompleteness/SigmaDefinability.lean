@@ -1,4 +1,5 @@
 import Mathlib.ModelTheory.Syntax
+import Mathlib.ModelTheory.Graph
 import Incompleteness.Arithmetic
 
 open FirstOrder
@@ -28,8 +29,16 @@ example : Prop := by
   have qf_eq : (QFFormula f0) := by
     apply QFFormula.equal t0 t0
 
-  -- have Larith := arithmetic
+  have Larith := Language.graph
+  have t1 : (Term Larith (ℕ ⊕ Fin 0)) := Language.Term.var (Sum.inl 1)
+  have r0 : (Language.graph.Relations 2) := Language.adj
+  have f1 : (Formula Larith ℕ) := @BoundedFormula.rel Larith ℕ 0 2 r0 (fun _=> t1)
 
   exact True
 
 #check BoundedFormula.rel
+#check Arithmetic.Constants
+#check Relations FirstOrder.Language.arithmetic
+#check FirstOrder.Language.graph.Relations 2
+#check Arithmetic.Relations.le
+#check FirstOrder.Language.arithmetic.2 2
