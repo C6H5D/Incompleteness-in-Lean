@@ -8,20 +8,69 @@ namespace FirstOrder
 namespace Language
 namespace Arithmetic
 
-def x0 : BoundedArithmeticTerm 1 := &0
-def q0 : BoundedArithmeticFormula 1 := (x0 =' x0)
-def pq : ArithmeticFormula := ∃' q0
-variable (φ : BoundedFormula L_arithmetic ℕ 2)
+def x0 : BoundedArithmeticTerm 2 := &0
+def x1 : BoundedArithmeticTerm 2 := &1
+-- def q0 : BoundedArithmeticFormula 1 := (x0 =' x0)
+-- def pq : ArithmeticFormula := ∃' q0
+-- variable (φ : BoundedFormula L_arithmetic ℕ 2)
+def φ : BoundedArithmeticFormula 2 := (x0 =' x1)
+def ψ₀ : BoundedArithmeticFormula 2 := (x1 =' (ArithmeticTerm.ofNat 0))
+def ψ_succ  : BoundedArithmeticFormula 2 := (x1 =' succ' (ArithmeticTerm.ofNat 0))
 
+-- ℝ → (y : ℝ) → y ≠ 0 → ℝ
+
+#check Part.get
+
+-- @[simp] theorem Part.get_pure 
+
+-- ![m, n]
 
 theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partrec f} :
-        ∃ φ : BoundedFormula L_arithmetic ℕ 2, φ.IsQF ∧ ∀ m n : ℕ, (@BoundedFormula.Realize L_arithmetic ℕ true_arithmetic ℕ 2 φ default (fun x => by 
-    induction x.val
-    exact m
-    exact n)) ↔ (f m = n) := by
+        ∃ φ : BoundedFormula L_arithmetic ℕ 2, φ.IsQF ∧ ∀ m n : ℕ, (BoundedFormula.Realize φ default (fun x => by 
+        induction x.val
+        exact m
+        exact n)) ↔ (f m = pure n) := by 
     induction hf with
-    | zero => sorry
-    | succ => sorry
+    | zero => 
+        use ψ₀
+        constructor
+        . sorry
+        . intro m n
+          constructor
+          . intro hrealize
+            apply Part.ext'
+            rfl
+            . simp
+              intro h
+              change 0 = _
+              sorry
+            --   have : Part.get (@Pure.pure 0 m) h = 0 := by 
+            --     sorry
+
+
+            -- simp at hrealize
+            -- unfold pure
+            -- unfold Applicative.toPure 
+            -- unfold Monad.toApplicative
+            -- unfold PFun.monad
+          . sorry
+
+    | succ => 
+        use ψ_succ
+        constructor
+        . sorry
+        . intro m n
+          constructor
+          . intro hrealize
+            apply Part.ext'
+            simp
+            intro h₁ h₂
+            simp
+            unfold BoundedFormula.Realize at hrealize
+            dsimp at hrealize
+
+            sorry
+          sorry
     | left => sorry
     | right => sorry
     | pair f g _ _ => sorry
@@ -34,7 +83,13 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
 #check BoundedFormula
 -- #check φ.Realize
 
-#check BoundedFormula.Realize φ default (fun n => by 
-    induction n.val
-    exact 0
-    exact 1)
+def m : ℕ := 8
+def n : ℕ := 9
+
+def p : Prop :=  BoundedFormula.Realize ψ₀ default (fun x => by 
+        induction x.val
+        exact m
+        exact n)
+#check p
+#check Part ℕ 
+-- #check pure 0 p
