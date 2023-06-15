@@ -26,10 +26,7 @@ def ψ_succ  : BoundedArithmeticFormula 2 := (x1 =' succ' (ArithmeticTerm.ofNat 
 -- ![m, n]
 
 theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partrec f} :
-        ∃ φ : BoundedFormula L_arithmetic ℕ 2, φ.IsQF ∧ ∀ m n : ℕ, (BoundedFormula.Realize φ default (fun x => by 
-        induction x.val
-        exact m
-        exact n)) ↔ (f m = pure n) := by 
+        ∃ φ : BoundedFormula L_arithmetic ℕ 2, φ.IsQF ∧ ∀ m n : ℕ, φ.Realize default ![m, n] ↔ (f m = pure n) := by 
     induction hf with
     | zero => 
         use ψ₀
@@ -44,16 +41,9 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
               intro h
               change 0 = _
               sorry
-            --   have : Part.get (@Pure.pure 0 m) h = 0 := by 
-            --     sorry
-
-
-            -- simp at hrealize
-            -- unfold pure
-            -- unfold Applicative.toPure 
-            -- unfold Monad.toApplicative
-            -- unfold PFun.monad
-          . sorry
+          . intro hpure
+            simp [BoundedFormula.Realize, Term.realize]
+            exact Iff.mp PartENat.natCast_inj (id (Eq.symm hpure))
 
     | succ => 
         use ψ_succ
