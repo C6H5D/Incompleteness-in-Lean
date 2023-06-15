@@ -108,7 +108,7 @@ def test1 := ∃' test ⊓ (&0 ≠' &0)
 def test2 := ∃' x <' eleven, test
 #print test2
 
-
+-- varFinsetLeft, varFinset
 
 -----------------Recall from ModelTheory.Syntax:-----------------
 
