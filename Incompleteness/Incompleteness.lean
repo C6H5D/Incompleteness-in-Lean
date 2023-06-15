@@ -3,6 +3,7 @@ import Mathlib.ModelTheory.Syntax
 import Mathlib.ModelTheory.Semantics
 import Mathlib.Computability.PartrecCode
 import Incompleteness.Arithmetic
+import Incompleteness.SigmaFormula
 
 namespace FirstOrder
 namespace Language
@@ -30,7 +31,7 @@ def ψ_left : BoundedArithmeticFormula 2 := ∃' (((y2 <' y0) ⊓ (((y0 ⬝' y0)
 -- ![m, n]
 
 theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partrec f} :
-        ∃ φ : BoundedFormula L_arithmetic Empty 2, φ.IsQF ∧ ∀ m n : ℕ, φ.Realize default ![m, n] ↔ (f m = pure n) := by 
+        ∃ φ : BoundedFormula L_arithmetic Empty 2, (IsSigma1 φ) ∧ ∀ m n : ℕ, φ.Realize default ![m, n] ↔ (f m = pure n) := by 
     induction hf with
     | zero => 
         use ψ₀
