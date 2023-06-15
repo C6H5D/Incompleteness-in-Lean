@@ -128,7 +128,8 @@ def test2 := ∃' x <' eleven, test
 def test3 := ∃' x ≤' eleven, test
 def test4 := ∀' x ≤' eleven, test
 def test5 := ∀' x <' eleven, test
-#print test4
+
+#print test1
 
 -- varFinsetLeft, varFinset
 
@@ -164,7 +165,7 @@ def test5 := ∀' x <' eleven, test
 
 -- instance : Inf (L.BoundedFormula α n) :=
 --   ⟨fun f g => (f.imp g.not).not⟩
-  -- use ⊓ 
+--   use ⊓ 
 
 -- instance : Sup (L.BoundedFormula α n) :=
 -- ⟨fun f g => f.not.imp g⟩
