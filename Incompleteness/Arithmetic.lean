@@ -130,8 +130,6 @@ def test4 := ∀' x ≤' eleven, test
 def test5 := ∀' x <' eleven, test
 #print test4
 
--- varFinsetLeft, varFinset
-
 -----------------Recall from ModelTheory.Syntax:-----------------
 
 -- prefix:arg "&" => FirstOrder.Language.Term.var ∘ Sum.inr
