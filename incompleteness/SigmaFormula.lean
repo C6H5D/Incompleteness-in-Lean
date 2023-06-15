@@ -1,7 +1,3 @@
---TODO bounded quantifiers: only ≤ bounded variables?
-  -- varFinsetLeft, varFinset
---TODO Sigma_1 formula
-
 import Mathlib.ModelTheory.Basic
 import Mathlib.ModelTheory.Syntax
 import Incompleteness.Arithmetic
