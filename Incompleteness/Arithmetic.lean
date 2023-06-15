@@ -49,17 +49,17 @@ instance true_arithmetic : Arithmetic.L_arithmetic.Structure ℕ := by
 -- Type Notation Simplifications
 @[reducible]
 def BoundedArithmeticFormula (n : ℕ) :=
-  BoundedFormula L_arithmetic ℕ n
+  BoundedFormula L_arithmetic Empty n
 
 @[reducible]
 def ArithmeticFormula :=
-  Formula L_arithmetic ℕ
+  Formula L_arithmetic Empty
 
 example: ArithmeticFormula = BoundedArithmeticFormula 0 := rfl
 
 @[reducible]
 def BoundedArithmeticTerm (n : ℕ) :=
-  Term L_arithmetic (ℕ ⊕ Fin n)
+  Term L_arithmetic (Empty ⊕ Fin n)
 
 @[reducible]
 def ArithmeticTerm := BoundedArithmeticTerm 0
@@ -100,13 +100,35 @@ syntax "∃' " binderIdent " <' " binderIdent ", " term : term
 
 macro_rules
   | `(∃' $_:ident <' $y:ident, $p) =>
-    `(∃' ((&0 <' $y:ident) ⊓ $p))
+    `(∃' ((&0 <' $y:ident) ⊓ ($p)))
+
+syntax "∃' " binderIdent " ≤' " binderIdent ", " term : term
+
+macro_rules
+  | `(∃' $_:ident ≤' $y:ident, $p) =>
+    `(∃' ((&0 ≤' $y:ident) ⊓ ($p)))
+
+syntax "∀' " binderIdent " <' " binderIdent ", " term : term
+
+macro_rules
+  | `(∀' $_:ident <' $y:ident, $p) =>
+    `(∀' ((&0 <' $y:ident) ⟹ ($p)))
+
+syntax "∀' " binderIdent " ≤' " binderIdent ", " term : term
+
+macro_rules
+  | `(∀' $_:ident ≤' $y:ident, $p) =>
+    `(∀' ((&0 ≤' $y:ident) ⟹ ($p)))
+
 
 def test : BoundedArithmeticFormula 2 := (&0 =' ArithmeticTerm.ofNat 11) ⊓ (&1 =' ArithmeticTerm.ofNat 17)
 def eleven : BoundedArithmeticTerm 2 := &1
 def test1 := ∃' test ⊓ (&0 ≠' &0)
 def test2 := ∃' x <' eleven, test
-#print test2
+def test3 := ∃' x ≤' eleven, test
+def test4 := ∀' x ≤' eleven, test
+def test5 := ∀' x <' eleven, test
+#print test4
 
 -- varFinsetLeft, varFinset
 
