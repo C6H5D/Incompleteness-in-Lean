@@ -2,12 +2,13 @@
 import Mathlib.ModelTheory.Syntax
 import Mathlib.ModelTheory.Graph
 import Incompleteness.Arithmetic
+import Incompleteness.SigmaFormula
 
 open FirstOrder
 open FirstOrder.Language
 open Arithmetic
 
-namespace FirstOrder.Language
+-- namespace FirstOrder.Language
 
 universe u v w u' v'
 
@@ -48,7 +49,7 @@ example : Prop := by
 
 
 
-def v0 : ArithmeticTerm := Language.Term.var (Sum.inl 0)
+def v0 : ArithmeticTerm := (0:ℕ)
 def p0 : ArithmeticFormula := (v0 =' v0)
 def p1 := ∼ p0
 def p2 := p1 ⟹ p0
@@ -79,7 +80,14 @@ example : (BoundedFormula.IsQF p0) := by
   apply BoundedFormula.IsQF.of_isAtomic
   apply BoundedFormula.IsAtomic.equal
 
-
+def one1 : BoundedArithmeticTerm 1 := succ' (ArithmeticTerm.ofNat 0)
+def fml := ∃' x <' one1, (&0 =' &0)
+example : IsDelta0 fml := by
+  apply IsDelta0.bex_lt
+  . apply IsDelta0.of_isQF
+    apply BoundedFormula.IsQF.of_isAtomic
+    exact BoundedFormula.IsAtomic.equal ((var ∘ Sum.inr) 0) ((var ∘ Sum.inr) 0)
+  simp
 
 #eval Decidable.decide (∃ m < 10, ∀ n < m, n = n)
 #synth Decidable (∃ m<10, ∀ n<m, n=n)
