@@ -48,7 +48,7 @@ example : Prop := by
 
 
 
-def v0 : ArithmeticTerm := Language.Term.var (Sum.inl 0)
+def v0 : ArithmeticTerm := (0:ℕ)
 def p0 : ArithmeticFormula := (v0 =' v0)
 def p1 := ∼ p0
 def p2 := p1 ⟹ p0
