@@ -32,7 +32,7 @@ def ψ_left : BoundedArithmeticFormula 2 := ∃' (((y2 <' y0) ⊓ (((y0 ⬝' y0)
 -- @[simp] lemma mylem : _ = _ := rfl
 
 theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partrec f} :
-        ∃ φ : BoundedFormula L_arithmetic Empty 2, (IsSigma1 φ) ∧ ∀ m n : ℕ, φ.Realize default ![m, n] ↔ (f m = pure n) := by 
+        ∃ φ : BoundedFormula L_arithmetic Empty 2, (IsSigma1 φ) ∧ ∀ m n : ℕ, φ.Realize default ![m, n] ↔ (f m = Part.some n) := by
     induction hf with
     | zero => 
         use ψ₀
@@ -42,21 +42,11 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
           apply BoundedFormula.IsQF.of_isAtomic
           apply BoundedFormula.IsAtomic.equal
         . intro m n
-          constructor
-          . intro hrealize
-            apply Part.ext'
+          have meaningFormula : ψ₀.Realize default ![m, n] ↔ 0 = n := by
             rfl
-            . simp
-              intro h
-              change 0 = _
-              exact hrealize
-
-          . intro hfunc
-            simp [BoundedFormula.Realize, Term.realize]
-
-            rw [← PartENat.natCast_inj]
-            exact hfunc
-
+          rw [meaningFormula]
+          symm
+          exact PartENat.natCast_inj
     | succ => 
         use ψ_succ
         constructor
@@ -65,17 +55,11 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
           apply BoundedFormula.IsQF.of_isAtomic
           apply BoundedFormula.IsAtomic.equal
         . intro m n
-          constructor
-          . intro hrealize
-            apply Part.ext'
+          have meaningFormula : ψ_succ.Realize default ![m, n] ↔ Nat.succ m = n := by
             rfl
-            . simp
-              exact hrealize
-
-          . intro hfunc
-            simp [BoundedFormula.Realize, Term.realize]
-            rw [← PartENat.natCast_inj]
-            exact hfunc
+          rw [meaningFormula]
+          symm
+          exact PartENat.natCast_inj
     | left => 
         use ψ_left
         constructor
