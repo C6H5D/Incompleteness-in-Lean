@@ -13,7 +13,7 @@ namespace Arithmetic
 
 theorem forall_distr_iff {α : Type} {P Q: α → Prop} : (∀ x, P x ↔ Q x) → ((∀ x, P x) ↔ (∀ x, P x)) := fun _ => OrderDual.forall
 
-theorem exists_distr_iff {α : Type} {P Q: α → Prop} : (∀ x, P x ↔ Q x) → ((∃ x, P x) ↔ (∃ x, P x)) := fun _ => OrderDual.exists
+theorem exists_distr_iff {α : Type} {P Q: α → Prop} : (∀ x, P x ↔ Q x) → ((∃ y, P y) ↔ (∃ z, P z)) := fun _ => OrderDual.exists
 
 -- simp helpers
 

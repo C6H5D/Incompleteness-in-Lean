@@ -26,8 +26,6 @@ def ψ₀ : BoundedArithmeticFormula 2 := ArithmeticTerm.ofNat 0 =' x1
 def ψ_succ  : BoundedArithmeticFormula 2 := succ' x0 =' x1
 def ψ_left : BoundedArithmeticFormula 2 := ∃' (((y2 <' y0) ⊓ (((y0 ⬝' y0) +' y2) =' y1)) ⊔ ((y0 ≤' y2) ⊓ (((y2 ⬝' y2) +' y2 +' y0) =' y1)))
 
-#check Part.get
-
 -- @[simp] theorem Part.get_pure 
 
 -- @[simp] lemma mylem : _ = _ := rfl
@@ -87,63 +85,42 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
           apply IsAtomic.equal
 
         . intro m n
-          constructor
-          . intro hrealize
+          suffices : (∃ r, Nat.pair n r = m) ↔ (@PFun.lift ℕ ℕ (fun n => (Nat.unpair n).fst) m = Part.some n)
+          . rw [← this]
+            simp
+            unfold Nat.pair
+            change (∃ a, _) ↔ (∃ b, _)
+            constructor <;> intro h <;> cases' h with x h <;> use x
+            . cases' (em (n < x)) with hl hr
+              . rw [if_pos hl]
+                simp [hl] at h
+                cases' h with tmp1 tmp2
+                . exact tmp1
+                . linarith
+              . rw [if_neg hr]
+                tauto
+            . cases' (em (n < x)) with hl hr
+              . rw [if_pos hl] at h
+                left
+                exact ⟨hl, h⟩
+              . rw [if_neg hr] at h
+                right
+                exact ⟨le_of_not_lt hr, h⟩ 
+          . constructor <;> intro h
             apply Part.ext'
-            rfl
+            . rfl
             . simp
-              suffices : ∃ r, Nat.pair n r = m 
-              . cases' this with r r_right
-                rw [← r_right, Nat.unpair_pair]
-              . simp [Nat.pair]
-                suffices : ∃ r, (n < r ∧ r * r + n = m) ∨ (¬n < r ∧ n * n + n + r = m)
-                . cases' this with r h
-                  use r
-                  cases' (em (n < r)) with hl hr
-                  . rw [if_pos hl]
-                    tauto
-                  . rw [if_neg hr]
-                    tauto
-                . change (∃' _).Realize _ _ at hrealize
-                  -- simp at hrealize
-                  rw [BoundedFormula.realize_ex] at hrealize
-                  cases' hrealize with r hrealize
-                  use r
-                  simp only [realize_sup, realize_inf, Arithmetic.realize_lt, Arithmetic.realize_ne, realize_bdEqual,
-                    Arithmetic.realize_plus, Arithmetic.realize_times, Arithmetic.realize_le] at hrealize  
-                  simp only [Pi.default_def, Function.comp_apply, Term.realize_var, Sum.elim_inr, ne_eq] at hrealize 
-                  simp at hrealize
-
-                  simp [lt_iff_le_and_ne.symm] at hrealize
-                  rwa [not_lt]
-                  
-          . intro hfunc
-            simp [BoundedFormula.Realize]
-            intro hcontra
-            specialize hcontra (Nat.unpair m).snd
-            sorry
-
-
-            
+              cases' h with r h
+              have h' : (Nat.unpair (Nat.pair n r)).fst = (Nat.unpair m).fst := by rw [h]
+              rw [Nat.unpair_pair] at h'
+              simp at h'
+              exact h'.symm
+            simp at h
+            use (Nat.unpair m).snd
+            rw [← h, Nat.pair_unpair]            
 
     | right => sorry
     | pair f g _ _ => sorry
     | comp f g _ _=> sorry
     | prec f g _ _ => sorry
     | rfind f _ => sorry
-    
-
-
-#check BoundedFormula
--- #check φ.Realize
-
-def m : ℕ := 8
-def n : ℕ := 9
-
-def p : Prop :=  BoundedFormula.Realize ψ₀ default (fun x => by 
-        induction x.val
-        exact m
-        exact n)
-#check p
-#check Part ℕ 
--- #check pure 0 p
