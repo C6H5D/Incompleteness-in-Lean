@@ -52,9 +52,7 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
           apply BoundedFormula.IsQF.of_isAtomic
           apply BoundedFormula.IsAtomic.equal
         . intro m n
-          have meaningFormula : ψ_succ.Realize default ![m, n] ↔ Nat.succ m = n := by
-            rfl
-          rw [meaningFormula]
+          rw [ψ_succ, x0, x1]
           symm
           exact PartENat.natCast_inj
     | left => 
