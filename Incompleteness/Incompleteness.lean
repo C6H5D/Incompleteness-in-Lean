@@ -113,10 +113,10 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
                     Arithmetic.realize_plus, Arithmetic.realize_times, Arithmetic.realize_le] at hrealize  
                   simp only [Pi.default_def, Function.comp_apply, Term.realize_var, Sum.elim_inr, ne_eq] at hrealize 
                   simp at hrealize
-                  rw [le_iff_eq_or_lt]
 
-                -- apply hrealize
-
+                  simp [lt_iff_le_and_ne.symm] at hrealize
+                  rwa [not_lt]
+                  
           . intro hfunc
             simp [BoundedFormula.Realize]
             intro hcontra
