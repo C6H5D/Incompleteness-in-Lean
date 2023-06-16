@@ -30,8 +30,6 @@ def ψ_left : BoundedArithmeticFormula 2 := ∃' (((y2 <' y0) ⊓ (((y0 ⬝' y0)
 
 -- @[simp] theorem Part.get_pure 
 
--- ![m, n]
-
 theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partrec f} :
         ∃ φ : BoundedFormula L_arithmetic Empty 2, (IsSigma1 φ) ∧ ∀ m n : ℕ, φ.Realize default ![m, n] ↔ (f m = pure n) := by 
     induction hf with
@@ -107,7 +105,14 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
             apply Part.ext'
             rfl
             . simp
-              sorry
+              suffices : ∃ r, Nat.pair n r = m 
+              . cases' this with r r_right
+                rw [← r_right, Nat.unpair_pair]
+              . simp [Nat.pair]
+                suffices : ∃ r, (n < r → r * r + n = m) ∧ (¬n < r → n * n + n + r = m)
+                . sorry
+                . sorry
+
 
           . intro hfunc
             apply realize_ex.mpr
