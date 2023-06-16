@@ -65,7 +65,7 @@ theorem realize_ofNat {l : ℕ} {v : Empty ⊕ Fin l → ℕ} :
     apply realize_succ
 
 
-@[simp high]
+@[simp↓]
 theorem realize_ball_le {l : ℕ} {t: BoundedArithmeticTerm l.succ} {θ : BoundedArithmeticFormula l.succ} {v : Empty → ℕ} {xs : Fin l → ℕ} : (∀' x ≤' t, θ).Realize v xs ↔ ∀ a ≤ (t.realize (Sum.elim v (Fin.snoc xs a))), θ.Realize v (Fin.snoc xs a) := by
   rw [BoundedFormula.realize_all]
   constructor <;> intro h a <;> specialize h a
@@ -76,7 +76,7 @@ theorem realize_ball_le {l : ℕ} {t: BoundedArithmeticTerm l.succ} {θ : Bounde
   . rw [BoundedFormula.realize_imp, realize_le]
     simpa
 
-@[simp high]
+@[simp↓]
 theorem realize_bex_le {l : ℕ} {t: BoundedArithmeticTerm l.succ} {θ : BoundedArithmeticFormula l.succ} {v : Empty → ℕ} {xs : Fin l → ℕ} : (∃' x ≤' t, θ).Realize v xs ↔ ∃ a ≤ (t.realize (Sum.elim v (Fin.snoc xs a))), θ.Realize v (Fin.snoc xs a) := by
   rw [BoundedFormula.realize_ex]
   constructor <;> intro h <;> cases' h with a h <;> use a
@@ -90,7 +90,7 @@ theorem realize_bex_le {l : ℕ} {t: BoundedArithmeticTerm l.succ} {θ : Bounded
   . rw [BoundedFormula.realize_inf, realize_le]
     simpa
 
-@[simp high]
+@[simp↓]
 theorem realize_ball_lt {l : ℕ} {t: BoundedArithmeticTerm l.succ} {θ : BoundedArithmeticFormula l.succ} {v : Empty → ℕ} {xs : Fin l → ℕ} : (∀' x <' t, θ).Realize v xs ↔ ∀ a < (t.realize (Sum.elim v (Fin.snoc xs a))), θ.Realize v (Fin.snoc xs a) := by
   rw [BoundedFormula.realize_all]
   constructor <;> intro h a <;> specialize h a
@@ -101,7 +101,7 @@ theorem realize_ball_lt {l : ℕ} {t: BoundedArithmeticTerm l.succ} {θ : Bounde
   . rw [BoundedFormula.realize_imp, realize_lt]
     simpa
 
-@[simp high]
+@[simp↓]
 theorem realize_bex_lt {l : ℕ} {t: BoundedArithmeticTerm l.succ} {θ : BoundedArithmeticFormula l.succ} {v : Empty → ℕ} {xs : Fin l → ℕ} : (∃' x <' t, θ).Realize v xs ↔ ∃ a < (t.realize (Sum.elim v (Fin.snoc xs a))), θ.Realize v (Fin.snoc xs a) := by
   rw [BoundedFormula.realize_ex]
   constructor <;> intro h <;> cases' h with a h <;> use a
