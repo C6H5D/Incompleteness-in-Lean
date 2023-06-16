@@ -117,9 +117,7 @@ theorem realize_bex_lt {l : ℕ} {t: BoundedArithmeticTerm l.succ} {θ : Bounded
 
 theorem realize_var₃_0 : (&0 : BoundedArithmeticTerm 3).realize (Sum.elim (default : Empty → ℕ) (Fin.snoc ![m, n] r)) = m := by
   simp
-  unfold Fin.snoc
-  have : ↑0 < Nat.succ (Nat.succ 0) := by simp
-  -- rw [if_pos this]
+  rfl
 
 
 example (m n : ℕ) : (∃x : ℕ, x * x = m ∧ m = 0) ↔ ((∃' ((((&2) *' (&2)) =' (&0)) ⊓ (&0 =' (ArithmeticTerm.ofNat 0)))).Realize default ![m , n])  := by
