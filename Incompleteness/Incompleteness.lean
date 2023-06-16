@@ -22,11 +22,11 @@ def ψ₀ : BoundedArithmeticFormula 2 := ArithmeticTerm.ofNat 0 =' x1
 def ψ_succ  : BoundedArithmeticFormula 2 := succ' x0 =' x1
 def ψ_left : BoundedArithmeticFormula 2 := ∃' (((y2 <' y0) ⊓ (((y0 ⬝' y0) +' y2) =' y1)) ⊔ ((y0 ≤' y2) ⊓ (((y2 ⬝' y2) +' y2 +' y0) =' y1)))
 
--- ℝ → (y : ℝ) → y ≠ 0 → ℝ
-
 #check Part.get
 
 -- @[simp] theorem Part.get_pure 
+
+-- @[simp] lemma mylem : _ = _ := rfl
 
 theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partrec f} :
         ∃ φ : BoundedFormula L_arithmetic Empty 2, (IsSigma1 φ) ∧ ∀ m n : ℕ, φ.Realize default ![m, n] ↔ (f m = pure n) := by 
@@ -81,16 +81,25 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
               . cases' this with r r_right
                 rw [← r_right, Nat.unpair_pair]
               . simp [Nat.pair]
-                suffices : ∃ r, (n < r → r * r + n = m) ∧ (¬n < r → n * n + n + r = m)
+                suffices : ∃ r, (n < r ∧ r * r + n = m) ∨ (r ≤ n ∧ n * n + n + r = m)
                 . sorry
-                . sorry
+                . dsimp [BoundedFormula.Realize, Structure.RelMap] at hrealize
+                  simp at hrealize
+                  change ¬ ∀ r, ¬ ((¬ ((¬ ((_) → ¬ ¬ r = m) → m * m + r ≠ n) → (_))) → (¬ (_ → _))) at hrealize
 
+
+
+
+                -- apply hrealize
 
           . intro hfunc
             simp [BoundedFormula.Realize]
+            intro hcontra
+            specialize hcontra (Nat.unpair m).snd
+            sorry
 
 
-            simp [BoundedFormula.Realize, Term.realize]
+            
 
     | right => sorry
     | pair f g _ _ => sorry
@@ -111,5 +120,5 @@ def p : Prop :=  BoundedFormula.Realize ψ₀ default (fun x => by
         exact m
         exact n)
 #check p
-#check Part ℕ 
+#check (Nat.pair 10 20).unpair.fst
 -- #check pure 0 p
