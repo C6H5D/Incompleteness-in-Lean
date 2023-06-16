@@ -4,6 +4,7 @@ import Mathlib.ModelTheory.Semantics
 import Mathlib.Computability.PartrecCode
 import Incompleteness.Arithmetic
 import Incompleteness.SigmaFormula
+import Incompleteness.SyntaxSimp
 
 namespace FirstOrder
 namespace Language
