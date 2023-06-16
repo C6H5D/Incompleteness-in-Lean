@@ -17,23 +17,23 @@ theorem exists_distr_iff {α : Type} {P Q: α → Prop} : (∀ x, P x ↔ Q x) �
 
 -- simp helpers
 
-@[simp]
+@[simp high]
 theorem realize_plus {t₁ t₂ : BoundedArithmeticTerm n} {v : Empty ⊕ Fin n → ℕ} :
     (t₁ +' t₂).realize v = (t₁.realize v) + (t₂.realize v) := by apply Term.realize_functions_apply₂
 
-@[simp]
+@[simp high]
 theorem realize_times {t₁ t₂ : BoundedArithmeticTerm n} {v : Empty ⊕ Fin n → ℕ} :
     (t₁ *' t₂).realize v = (t₁.realize v) * (t₂.realize v) := by apply Term.realize_functions_apply₂
 
-@[simp]
+@[simp high]
 theorem realize_le {t₁ t₂ : BoundedArithmeticTerm n} {v : Empty → ℕ} :
     (t₁ ≤' t₂).Realize v xs ↔ (t₁.realize (Sum.elim v xs)) ≤ (t₂.realize (Sum.elim v xs)) := by apply BoundedFormula.realize_rel₂
 
-@[simp]
+@[simp high]
 theorem realize_ne {t₁ t₂ : BoundedArithmeticTerm n} {v : Empty → ℕ} :
     (t₁ ≠' t₂).Realize v xs ↔ (t₁.realize (Sum.elim v xs)) ≠ (t₂.realize (Sum.elim v xs)) := by simp only [BoundedFormula.realize_not, BoundedFormula.realize_bdEqual, ne_eq]
 
-@[simp]
+@[simp high]
 theorem realize_lt {t₁ t₂ : BoundedArithmeticTerm n} {v : Empty → ℕ} :
     (t₁ <' t₂).Realize v xs ↔ (t₁.realize (Sum.elim v xs)) < (t₂.realize (Sum.elim v xs)) := by 
     change (((t₁ ≤' t₂) ⊓ (t₁ ≠' t₂)).Realize v xs) ↔ _
@@ -42,19 +42,19 @@ theorem realize_lt {t₁ t₂ : BoundedArithmeticTerm n} {v : Empty → ℕ} :
     change (t₁.realize (Sum.elim v xs)) ≤ (t₂.realize (Sum.elim v xs)) ∧ (t₁.realize (Sum.elim v xs)) ≠ (t₂.realize (Sum.elim v xs)) ↔ _
     rw [lt_iff_le_and_ne]
     
-@[simp]
+@[simp high]
 theorem realize_ge {t₁ t₂ : BoundedArithmeticTerm n} {v : Empty → ℕ} :
     (t₁ ≥' t₂).Realize v xs ↔ (t₁.realize (Sum.elim v xs)) ≥ (t₂.realize (Sum.elim v xs)) := by rw [ge_iff_le]; rw [realize_le]
 
-@[simp]
+@[simp high]
 theorem realize_gt {t₁ t₂ : BoundedArithmeticTerm n} {v : Empty → ℕ} :
     (t₁ >' t₂).Realize v xs ↔ (t₁.realize (Sum.elim v xs)) > (t₂.realize (Sum.elim v xs)) := by apply realize_lt
 
-@[simp]
+@[simp high]
 theorem realize_succ {t: BoundedArithmeticTerm n} {v : Empty ⊕ Fin n → ℕ} :
     (succ' t).realize v = Nat.succ (t.realize v) := by apply Term.realize_functions_apply₁
 
-@[simp]
+@[simp high]
 theorem realize_ofNat {l : ℕ} {v : Empty ⊕ Fin l → ℕ} :
     (ArithmeticTerm.ofNat n).realize v = n := by 
     induction' n with n IH
@@ -126,4 +126,5 @@ example (m n : ℕ) : (∃x ≤ n, x * x = m ∧ m = 0) ↔ ((∃' x ≤' &1, ((
   have : ∀ (x : ℕ), x ≤ n ∧ x * x = m ∧ m = 0 ↔ x ≤ n ∧ x * x = m ∧ m = 0 := by simp only [forall_const]
   exact this
 
--- TODO: 1. Automated Sigma_1 proof; 2. Prettier notation 3. better natural number coercion
+-- TODO: 0. if then else
+-- 1. Automated Sigma_1 proof; 2. Prettier notation 3. better natural number coercion
