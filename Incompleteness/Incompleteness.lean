@@ -9,6 +9,8 @@ namespace FirstOrder
 namespace Language
 namespace Arithmetic
 
+open BoundedFormula
+
 def x0 : BoundedArithmeticTerm 2 := &0
 def x1 : BoundedArithmeticTerm 2 := &1
 def y0 : BoundedArithmeticTerm 3 := &0
@@ -36,7 +38,10 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
     | zero => 
         use ψ₀
         constructor
-        . sorry
+        . apply IsSigma1.of_isDelta0 
+          apply IsDelta0.of_isQF
+          apply BoundedFormula.IsQF.of_isAtomic
+          apply BoundedFormula.IsAtomic.equal
         . intro m n
           constructor
           . intro hrealize
@@ -56,7 +61,10 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
     | succ => 
         use ψ_succ
         constructor
-        . sorry
+        . apply IsSigma1.of_isDelta0 
+          apply IsDelta0.of_isQF
+          apply BoundedFormula.IsQF.of_isAtomic
+          apply BoundedFormula.IsAtomic.equal
         . intro m n
           constructor
           . intro hrealize
@@ -72,7 +80,27 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
     | left => 
         use ψ_left
         constructor
-        . sorry
+        . apply IsSigma1.ex
+          apply IsSigma1.of_isDelta0
+          apply IsDelta0.or <;> apply IsDelta0.and
+
+          apply IsDelta0.and
+          case left.left.h.h.h1.h1.h2 =>
+            change IsDelta0 (∼(y2 =' y0))
+            apply IsDelta0.of_isQF
+            apply IsQF.imp 
+            apply IsQF.of_isAtomic
+            apply IsAtomic.equal
+            apply IsQF.falsum
+
+          all_goals
+            apply IsDelta0.of_isQF; apply IsQF.of_isAtomic
+          
+          apply IsAtomic.rel
+          apply IsAtomic.equal
+          apply IsAtomic.rel
+          apply IsAtomic.equal
+
         . intro m n
           constructor
           . intro hrealize
@@ -82,11 +110,10 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
               sorry
 
           . intro hfunc
-            simp [BoundedFormula.Realize]
-
-
-            simp [BoundedFormula.Realize, Term.realize]
-
+            apply realize_ex.mpr
+            simp
+            sorry
+            
     | right => sorry
     | pair f g _ _ => sorry
     | comp f g _ _=> sorry
@@ -107,4 +134,5 @@ def p : Prop :=  BoundedFormula.Realize ψ₀ default (fun x => by
         exact n)
 #check p
 #check Part ℕ 
--- #check pure 0 p
+
+-- Package Σ₁-soundness and effective axiomatizability

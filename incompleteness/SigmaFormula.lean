@@ -16,6 +16,8 @@ inductive IsDelta0 : (BoundedArithmeticFormula n) → Prop
   | bex_le {φ t} (h : IsDelta0 φ): ((Sum.inr 0) ∉ (t.varFinset)) → IsDelta0 (∃' x ≤' t, φ)
   | ball_lt {φ t} (h : IsDelta0 φ): ((Sum.inr 0) ∉ (t.varFinset)) → IsDelta0 (∀' x <' t, φ)
   | ball_le {φ t} (h : IsDelta0 φ): ((Sum.inr 0) ∉ (t.varFinset)) → IsDelta0 (∀' x ≤' t, φ)
+  | and {φ ψ} (h1 : IsDelta0 φ) (h2 : IsDelta0 ψ): IsDelta0 (φ ⊓ ψ)
+  | or {φ ψ} (h1 : IsDelta0 φ) (h2 : IsDelta0 ψ): IsDelta0 (φ ⊔ ψ)
 -- Probably will want to add more closure properties later
 
 inductive IsSigma1 : (BoundedArithmeticFormula n) → Prop
@@ -23,3 +25,5 @@ inductive IsSigma1 : (BoundedArithmeticFormula n) → Prop
   | ex {φ} (h : IsSigma1 φ): IsSigma1 (∃' φ)
   | and {φ ψ} (h1 : IsSigma1 φ) (h2 : IsSigma1 ψ): IsSigma1 (φ ⊓ ψ)
   | or {φ ψ} (h1 : IsSigma1 φ) (h2 : IsSigma1 ψ): IsSigma1 (φ ⊔ ψ)
+
+-- Define Sigma_1 soundness
