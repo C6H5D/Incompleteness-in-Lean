@@ -77,48 +77,50 @@ attribute [coe] ArithmeticTerm.ofNat
 
 prefix:max " succ' "  => (fun t => Functions.apply₁ Arithmetic.succ t)
 
-infixl:65 " +' " => (fun t u => Functions.apply₂ Arithmetic.plus t u)
+infixl:90 " +' " => (fun t u => Functions.apply₂ Arithmetic.plus t u)
 
-infixl:70 " ⬝' " => (fun t u => Functions.apply₂ Arithmetic.times t u)
+infixl:100 " ⬝' " => (fun t u => Functions.apply₂ Arithmetic.times t u)
 
-infix:50 " ≤' " => (fun t u => Relations.boundedFormula₂ Arithmetic.le t u)
+infixl:100 " *' " => (fun t u => Functions.apply₂ Arithmetic.times t u)
 
-infix:50 " ≠' " => (fun t u => ∼ (t =' u))
+infix:88 " ≤' " => (fun t u => Relations.boundedFormula₂ Arithmetic.le t u)
 
-infix:50 " <' " => (fun t u => (t ≤' u) ⊓ (t ≠' u))
+infix:88 " ≠' " => (fun t u => ∼ (t =' u))
 
-infix:50 " ≥' " => (fun t u => (u ≤' t))
+infix:88 " <' " => (fun t u => (t ≤' u) ⊓ (t ≠' u))
 
-infix:50 " >' " => (fun t u => (u <' t))
+infix:88 " ≥' " => (fun t u => (u ≤' t))
+
+infix:88 " >' " => (fun t u => (u <' t))
 
 ----------- Bounded quantifier: use macro for bq; check Delta_0 by asking for a proof
 
 open Std.ExtendedBinder
 open Lean
 
-syntax "∃' " binderIdent " <' " binderIdent ", " term : term
+syntax "∃' " binderIdent " <' " term ", " term : term
 
 macro_rules
-  | `(∃' $_:ident <' $y:ident, $p) =>
-    `(∃' ((&0 <' $y:ident) ⊓ ($p)))
+  | `(∃' $_:ident <' $y:term, $p) =>
+    `(∃' ((&(Fin.last _) <' $y:term) ⊓ ($p)))
 
-syntax "∃' " binderIdent " ≤' " binderIdent ", " term : term
-
-macro_rules
-  | `(∃' $_:ident ≤' $y:ident, $p) =>
-    `(∃' ((&0 ≤' $y:ident) ⊓ ($p)))
-
-syntax "∀' " binderIdent " <' " binderIdent ", " term : term
+syntax "∃' " binderIdent " ≤' " term ", " term : term
 
 macro_rules
-  | `(∀' $_:ident <' $y:ident, $p) =>
-    `(∀' ((&0 <' $y:ident) ⟹ ($p)))
+  | `(∃' $_:ident ≤' $y:term, $p) =>
+    `(∃' ((&(Fin.last _) ≤' $y:term) ⊓ ($p)))
 
-syntax "∀' " binderIdent " ≤' " binderIdent ", " term : term
+syntax "∀' " binderIdent " <' " term ", " term : term
 
 macro_rules
-  | `(∀' $_:ident ≤' $y:ident, $p) =>
-    `(∀' ((&0 ≤' $y:ident) ⟹ ($p)))
+  | `(∀' $_:ident <' $y:term, $p) =>
+    `(∀' ((&(Fin.last _) <' $y:term) ⟹ ($p)))
+
+syntax "∀' " binderIdent " ≤' " term ", " term : term
+
+macro_rules
+  | `(∀' $_:ident ≤' $y:term, $p) =>
+    `(∀' ((&(Fin.last _) ≤' $y:term) ⟹ ($p)))
 
 
 def test : BoundedArithmeticFormula 2 := (&0 =' ArithmeticTerm.ofNat 11) ⊓ (&1 =' ArithmeticTerm.ofNat 17)
@@ -168,4 +170,3 @@ def test5 := ∀' x <' eleven, test
 -- instance : Sup (L.BoundedFormula α n) :=
 -- ⟨fun f g => f.not.imp g⟩
   -- use ⊔ 
-
