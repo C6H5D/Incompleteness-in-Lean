@@ -11,6 +11,7 @@ namespace Language
 namespace Arithmetic
 
 open BoundedFormula
+open Arithmetic
 
 def x0 : BoundedArithmeticTerm 2 := &0
 def x1 : BoundedArithmeticTerm 2 := &1
@@ -61,7 +62,8 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
           symm
           exact PartENat.natCast_inj
     | left => 
-        use ψ_left
+        -- use ψ_left
+        use ∃' (((&1 <' &2) ⊓ (((&2 ⬝' &2) +' &1) =' &0)) ⊔ ((&2 ≤' &1) ⊓ (((&1 ⬝' &1) +' &1 +' &2) =' &0)))
         constructor
         . apply IsSigma1.ex
           apply IsSigma1.of_isDelta0
@@ -69,7 +71,7 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
 
           apply IsDelta0.and
           case left.left.h.h.h1.h1.h2 =>
-            change IsDelta0 (∼(y2 =' y0))
+            change IsDelta0 (∼(_ =' _))
             apply IsDelta0.of_isQF
             apply IsQF.imp 
             apply IsQF.of_isAtomic
@@ -107,10 +109,11 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
                   rw [BoundedFormula.realize_ex] at hrealize
                   cases' hrealize with r hrealize
                   use r
-                  simp only [realize_sup, realize_inf, Arithmetic.realize_lt, realize_bdEqual,
-                    Arithmetic.realize_plus, Arithmetic.realize_times, Arithmetic.realize_le, Term.func] at hrealize  
-                  assumption
-
+                  simp only [realize_sup, realize_inf, Arithmetic.realize_lt, Arithmetic.realize_ne, realize_bdEqual,
+                    Arithmetic.realize_plus, Arithmetic.realize_times, Arithmetic.realize_le] at hrealize  
+                  simp only [Pi.default_def, Function.comp_apply, Term.realize_var, Sum.elim_inr, ne_eq] at hrealize 
+                  simp at hrealize
+                  rw [le_iff_eq_or_lt]
 
                 -- apply hrealize
 

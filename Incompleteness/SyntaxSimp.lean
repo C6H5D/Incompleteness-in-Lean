@@ -115,21 +115,41 @@ theorem realize_bex_lt {l : ℕ} {t: BoundedArithmeticTerm l.succ} {θ : Bounded
   . rw [BoundedFormula.realize_inf, realize_lt]
     simpa
 
-theorem realize_var₃_0 : (&0 : BoundedArithmeticTerm 3).realize (Sum.elim (default : Empty → ℕ) (Fin.snoc ![m, n] r)) = m := by
-  simp
-  rfl
+@[simp]
+theorem fin₃_0 {m n r : ℕ} : @Fin.snoc 2 (fun _ => ℕ) ![m, n] r 0 = m := rfl
 
+@[simp]
+theorem fin₃_1 {m n r : ℕ} : @Fin.snoc 2 (fun _ => ℕ) ![m, n] r 1 = n := rfl
+
+@[simp]
+theorem fin₃_2 {m n r : ℕ} : @Fin.snoc 2 (fun _ => ℕ) ![m, n] r 2 = r := rfl
+-- @[simp]
+-- theorem realize_var₃_0 : (&0 : BoundedArithmeticTerm 3).realize (Sum.elim (default : Empty → ℕ) (Fin.snoc ![m, n] r)) = m := by
+--   simp
+--   rfl
+
+-- theorem tmp : Term.realize (Sum.elim (default : Empty → ℕ) (Fin.snoc ![m, n] r)) ((var ∘ Sum.inr) 0 : BoundedArithmeticTerm 3) = m := rfl
+
+-- @[simp]
+-- theorem realize_var₃_1 : (&1 : BoundedArithmeticTerm 3).realize (Sum.elim (default : Empty → ℕ) (Fin.snoc ![m, n] r)) = n := by
+--   simp
+--   rfl
+
+-- @[simp]
+-- theorem realize_var₃_2 : (&2 : BoundedArithmeticTerm 3).realize (Sum.elim (default : Empty → ℕ) (Fin.snoc ![m, n] r)) = r := by
+--   simp
+--   rfl
 
 example (m n : ℕ) : (∃x : ℕ, x * x = m ∧ m = 0) ↔ ((∃' ((((&2) *' (&2)) =' (&0)) ⊓ (&0 =' (ArithmeticTerm.ofNat 0)))).Realize default ![m , n])  := by
   simp
-  tauto
+  -- tauto
 
 example (m n : ℕ) : (∃x ≤ n, x * x = m ∧ m = 0) ↔ ((∃' x ≤' &1, ((((&2) *' (&2)) =' (&0)) ⊓ (&0 =' (@ArithmeticTerm.ofNat 3 0)))).Realize default ![m , n])  := by
   simp only [realize_bex_le]
   simp
-  apply exists_distr_iff
-  have : ∀ (x : ℕ), x ≤ n ∧ x * x = m ∧ m = 0 ↔ x ≤ n ∧ x * x = m ∧ m = 0 := by simp only [forall_const]
-  exact this
+  -- apply exists_distr_iff
+  -- have : ∀ (x : ℕ), x ≤ n ∧ x * x = m ∧ m = 0 ↔ x ≤ n ∧ x * x = m ∧ m = 0 := by simp only [forall_const]
+  -- exact this
 
 -- TODO: 0. if then else
 -- 1. Automated Sigma_1 proof; 2. Prettier notation 3. better natural number coercion
