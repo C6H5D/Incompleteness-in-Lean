@@ -126,4 +126,4 @@ example (m n : ℕ) : (∃x ≤ n, x * x = m ∧ m = 0) ↔ ((∃' x ≤' &1, ((
   have : ∀ (x : ℕ), x ≤ n ∧ x * x = m ∧ m = 0 ↔ x ≤ n ∧ x * x = m ∧ m = 0 := by simp only [forall_const]
   exact this
 
--- TODO: 1. Automated Sigma_1 proof; 2. Prettier notation
+-- TODO: 1. Automated Sigma_1 proof; 2. Prettier notation 3. better natural number coercion
