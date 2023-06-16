@@ -110,9 +110,22 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
               . cases' this with r r_right
                 rw [← r_right, Nat.unpair_pair]
               . simp [Nat.pair]
-                suffices : ∃ r, (n < r → r * r + n = m) ∧ (¬n < r → n * n + n + r = m)
-                . sorry
-                . sorry
+                suffices : ∃ r, (n < r ∧ r * r + n = m) ∨ (¬n < r ∧ n * n + n + r = m)
+                . cases' this with r h
+                  use r
+                  cases' (em (n < r)) with hl hr
+                  . rw [if_pos hl]
+                    tauto
+                  . rw [if_neg hr]
+                    tauto
+                . change (∃' _).Realize _ _ at hrealize
+                  -- simp at hrealize
+                  rw [BoundedFormula.realize_ex] at hrealize
+                  cases' hrealize with r hrealize
+                  use r
+                  simp only [realize_sup, realize_inf, Arithmetic.realize_lt, realize_bdEqual,
+                    Arithmetic.realize_plus, Arithmetic.realize_times, Arithmetic.realize_le, Term.func] at hrealize  
+                  assumption
 
 
           . intro hfunc
