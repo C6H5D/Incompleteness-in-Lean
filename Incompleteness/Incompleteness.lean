@@ -24,15 +24,16 @@ def y2 : BoundedArithmeticTerm 3 := &2
 def φ : BoundedArithmeticFormula 2 := x0 =' x1
 def ψ₀ : BoundedArithmeticFormula 2 := ArithmeticTerm.ofNat 0 =' x1
 def ψ_succ  : BoundedArithmeticFormula 2 := succ' x0 =' x1
-def ψ_left : BoundedArithmeticFormula 2 := ∃' (((&1 <' &2) ⊓ (((&2 ⬝' &2) +' &1) =' &0)) ⊔ ((&2 ≤' &1) ⊓ (((&1 ⬝' &1) +' &1 +' &2) =' &0)))
+def ψ_left  : BoundedArithmeticFormula 2 := ∃' (((&1 <' &2) ⊓ (((&2 ⬝' &2) +' &1) =' &0)) ⊔ ((&2 ≤' &1) ⊓ (((&1 ⬝' &1) +' &1 +' &2) =' &0)))
+def ψ_right : BoundedArithmeticFormula 2 := ∃' (((&2 <' &1) ⊓ (((&1 ⬝' &1) +' &2) =' &0)) ⊔ ((&1 ≤' &2) ⊓ (((&2 ⬝' &2) +' &2 +' &1) =' &0)))
 
 -- @[simp] theorem Part.get_pure 
 
 -- @[simp] lemma mylem : _ = _ := rfl
 
-lemma pair_lemma : ∀ a n m: ℕ, n < a ∧ a * a + n = m ∨ a ≤ n ∧ n * n + n + a = m ↔ (Nat.pair n a) = m := by
+lemma pair_lemma : ∀ a b ab: ℕ, a < b ∧ b * b + a = ab ∨ b ≤ a ∧ a * a + a + b = ab ↔ (Nat.pair a b) = ab := by
     unfold Nat.pair
-    intro a n m
+    intro a b ab
     constructor
     · intro h
       cases' h with h1 h2
@@ -93,24 +94,44 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
           apply IsAtomic.rel
           apply IsAtomic.equal
 
-        . intro m n
+        . intro ab a
           rw [ψ_left]
           simp
           constructor
           · intro h
-            cases' h with a pairing
-            rw [pair_lemma a n m] at pairing
+            cases' h with b pairing
+            rw [pair_lemma a b ab] at pairing
             rw [← pairing]
-            rw [Nat.unpair_pair n a]
+            rw [Nat.unpair_pair a b]
           · intro h
-            let a := (Nat.unpair m).snd
-            use a
-            rw [pair_lemma a n m]
+            let b := (Nat.unpair ab).snd
+            use b
+            rw [pair_lemma a b ab]
             simp
             rw [← h]
-            exact Nat.pair_unpair m
+            exact Nat.pair_unpair ab
 
-    | right => sorry
+    | right =>
+        use ψ_right
+        constructor
+        · sorry
+        · intro ab b
+          rw [ψ_right]
+          simp
+          constructor
+          · intro h
+            cases' h with a pairing
+            rw [pair_lemma a b ab] at pairing
+            rw [← pairing]
+            rw [Nat.unpair_pair a b]
+          · intro h
+            let a := (Nat.unpair ab).fst
+            use a
+            rw [pair_lemma a b ab]
+            simp
+            rw [← h]
+            exact Nat.pair_unpair ab
+
     | pair f g _ _ => sorry
     | comp f g _ _=> sorry
     | prec f g _ _ => sorry
