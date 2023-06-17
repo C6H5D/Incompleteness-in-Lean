@@ -44,6 +44,16 @@ lemma pair_lemma : ∀ a b ab: ℕ, a < b ∧ b * b + a = ab ∨ b ≤ a ∧ a *
         have ll := Nat.not_lt.mpr l
         rw [if_neg ll]
         exact r
+    · intro h
+      have c := Nat.lt_or_ge a b
+      cases' c with c0 c1
+      · left
+        rw [if_pos c0] at h
+        exact ⟨c0, h⟩
+      · right
+        have ll : ¬a<b := Nat.not_lt.mpr c1
+        rw [if_neg ll] at h
+        exact ⟨c1, h⟩
 
 theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partrec f} :
         ∃ φ : BoundedFormula L_arithmetic Empty 2, (IsSigma1 φ) ∧ ∀ m n : ℕ, φ.Realize default ![m, n] ↔ (f m = Part.some n) := by
