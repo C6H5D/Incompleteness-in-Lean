@@ -24,11 +24,25 @@ def y2 : BoundedArithmeticTerm 3 := &2
 def φ : BoundedArithmeticFormula 2 := x0 =' x1
 def ψ₀ : BoundedArithmeticFormula 2 := ArithmeticTerm.ofNat 0 =' x1
 def ψ_succ  : BoundedArithmeticFormula 2 := succ' x0 =' x1
-def ψ_left : BoundedArithmeticFormula 2 := ∃' (((y2 <' y0) ⊓ (((y0 ⬝' y0) +' y2) =' y1)) ⊔ ((y0 ≤' y2) ⊓ (((y2 ⬝' y2) +' y2 +' y0) =' y1)))
+def ψ_left : BoundedArithmeticFormula 2 := ∃' (((&1 <' &2) ⊓ (((&2 ⬝' &2) +' &1) =' &0)) ⊔ ((&2 ≤' &1) ⊓ (((&1 ⬝' &1) +' &1 +' &2) =' &0)))
 
 -- @[simp] theorem Part.get_pure 
 
 -- @[simp] lemma mylem : _ = _ := rfl
+
+lemma pair_lemma : ∀ a n m: ℕ, n < a ∧ a * a + n = m ∨ a ≤ n ∧ n * n + n + a = m ↔ (Nat.pair n a) = m := by
+    unfold Nat.pair
+    intro a n m
+    constructor
+    · intro h
+      cases' h with h1 h2
+      · cases' h1 with l r
+        rw [if_pos l]
+        exact r
+      · cases' h2 with l r
+        have ll := Nat.not_lt.mpr l
+        rw [if_neg ll]
+        exact r
 
 theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partrec f} :
         ∃ φ : BoundedFormula L_arithmetic Empty 2, (IsSigma1 φ) ∧ ∀ m n : ℕ, φ.Realize default ![m, n] ↔ (f m = Part.some n) := by
@@ -56,8 +70,7 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
           symm
           exact PartENat.natCast_inj
     | left => 
-        -- use ψ_left
-        use ∃' (((&1 <' &2) ⊓ (((&2 ⬝' &2) +' &1) =' &0)) ⊔ ((&2 ≤' &1) ⊓ (((&1 ⬝' &1) +' &1 +' &2) =' &0)))
+        use ψ_left
         constructor
         . apply IsSigma1.ex
           apply IsSigma1.of_isDelta0
@@ -81,39 +94,20 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
           apply IsAtomic.equal
 
         . intro m n
-          suffices : (∃ r, Nat.pair n r = m) ↔ (@PFun.lift ℕ ℕ (fun n => (Nat.unpair n).fst) m = Part.some n)
-          . rw [← this]
-            simp
-            unfold Nat.pair
-            change (∃ a, _) ↔ (∃ b, _)
-            constructor <;> intro h <;> cases' h with x h <;> use x
-            . cases' (em (n < x)) with hl hr
-              . rw [if_pos hl]
-                simp [hl] at h
-                cases' h with tmp1 tmp2
-                . exact tmp1
-                . linarith
-              . rw [if_neg hr]
-                tauto
-            . cases' (em (n < x)) with hl hr
-              . rw [if_pos hl] at h
-                left
-                exact ⟨hl, h⟩
-              . rw [if_neg hr] at h
-                right
-                exact ⟨le_of_not_lt hr, h⟩ 
-          . constructor <;> intro h
-            apply Part.ext'
-            . rfl
-            . simp
-              cases' h with r h
-              have h' : (Nat.unpair (Nat.pair n r)).fst = (Nat.unpair m).fst := by rw [h]
-              rw [Nat.unpair_pair] at h'
-              simp at h'
-              exact h'.symm
-            simp at h
+          rw [ψ_left]
+          simp
+          constructor
+          · intro h
+            cases' h with a pairing
+            have sweet := (pair_lemma a n m).mp pairing
+            rw [← sweet]
+            simp only [Nat.unpair_pair]
+          · intro h
             use (Nat.unpair m).snd
-            rw [← h, Nat.pair_unpair]            
+            rw [← h]
+            have a := (pair_lemma (Nat.unpair m).snd (Nat.unpair m).fst m).mpr
+            apply a
+            simp
 
     | right => sorry
     | pair f g _ _ => sorry
