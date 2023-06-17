@@ -99,15 +99,16 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
           constructor
           · intro h
             cases' h with a pairing
-            have sweet := (pair_lemma a n m).mp pairing
-            rw [← sweet]
-            simp only [Nat.unpair_pair]
+            rw [pair_lemma a n m] at pairing
+            rw [← pairing]
+            rw [Nat.unpair_pair n a]
           · intro h
-            use (Nat.unpair m).snd
-            rw [← h]
-            have a := (pair_lemma (Nat.unpair m).snd (Nat.unpair m).fst m).mpr
-            apply a
+            let a := (Nat.unpair m).snd
+            use a
+            rw [pair_lemma a n m]
             simp
+            rw [← h]
+            exact Nat.pair_unpair m
 
     | right => sorry
     | pair f g _ _ => sorry
