@@ -27,6 +27,26 @@ def ψ_succ  : BoundedArithmeticFormula 2 := succ' x0 =' x1
 def ψ_left  : BoundedArithmeticFormula 2 := ∃' (((&1 <' &2) ⊓ (((&2 ⬝' &2) +' &1) =' &0)) ⊔ ((&2 ≤' &1) ⊓ (((&1 ⬝' &1) +' &1 +' &2) =' &0)))
 def ψ_right : BoundedArithmeticFormula 2 := ∃' (((&2 <' &1) ⊓ (((&1 ⬝' &1) +' &2) =' &0)) ⊔ ((&1 ≤' &2) ⊓ (((&2 ⬝' &2) +' &2 +' &1) =' &0)))
 
+-- This requires some work
+
+def ψ_pair (ψ_f ψ_g : BoundedArithmeticFormula 2) : BoundedArithmeticFormula 2 := ∃' ∃' ((liftAt 2 1 ψ_f) ⊓ (liftAt 2 2 ψ_g))
+
+-- What we want to say is this:
+-- ψ_pair (n,m) <-> ∃k ∃l, (f(n,k) ∧ g(n,l) ∧ (k < l ∧ l * l + l = m ∨ l ≤ k ∧ k * k + k + l = m))
+
+-- But we need to tell the existence quantifier what to bind - or equivalently shuffle the free variables of f
+-- I think what we need is liftAt
+
+#check liftAt 3 20 ψ_succ
+
+theorem a : (∃' (liftAt 1 1 ψ_succ)).Realize default ![2, 3] := by
+   rw [ψ_succ,x0,x1]
+   simp
+   use 4
+   simp
+   -- Missing rules to simplify lift
+
+
 -- @[simp] theorem Part.get_pure 
 
 -- @[simp] lemma mylem : _ = _ := rfl
@@ -142,7 +162,17 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
             rw [← h]
             exact Nat.pair_unpair ab
 
-    | pair f g _ _ => sorry
+    | pair f g f_has_sigma1 g_has_sigma1 =>
+        cases' f_has_sigma1 with f_form f_sigma1_realize
+        cases' f_sigma1_realize with f_sigma1 f_realize
+        cases' g_has_sigma1 with g_form g_sigma1_realize
+        cases' g_sigma1_realize with g_sigma1 g_realize
+        let ψ := ψ_pair f_form g_form
+        use ψ
+        constructor
+        · sorry
+        · sorry
+
     | comp f g _ _=> sorry
     | prec f g _ _ => sorry
     | rfind f _ => sorry
