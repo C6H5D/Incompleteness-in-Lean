@@ -24,12 +24,15 @@ def y2 : BoundedArithmeticTerm 3 := &2
 def φ : BoundedArithmeticFormula 2 := x0 =' x1
 def ψ₀ : BoundedArithmeticFormula 2 := ArithmeticTerm.ofNat 0 =' x1
 def ψ_succ  : BoundedArithmeticFormula 2 := succ' x0 =' x1
-def ψ_left  : BoundedArithmeticFormula 2 := ∃' (((&1 <' &2) ⊓ (((&2 ⬝' &2) +' &1) =' &0)) ⊔ ((&2 ≤' &1) ⊓ (((&1 ⬝' &1) +' &1 +' &2) =' &0)))
-def ψ_right : BoundedArithmeticFormula 2 := ∃' (((&2 <' &1) ⊓ (((&1 ⬝' &1) +' &2) =' &0)) ⊔ ((&1 ≤' &2) ⊓ (((&2 ⬝' &2) +' &2 +' &1) =' &0)))
+def ψ_left  : BoundedArithmeticFormula 2 := 
+    ∃' (((&1 <' &2) ⊓ (((&2 ⬝' &2) +' &1) =' &0)) ⊔ ((&2 ≤' &1) ⊓ (((&1 ⬝' &1) +' &1 +' &2) =' &0)))
+def ψ_right : BoundedArithmeticFormula 2 := 
+    ∃' (((&2 <' &1) ⊓ (((&1 ⬝' &1) +' &2) =' &0)) ⊔ ((&1 ≤' &2) ⊓ (((&2 ⬝' &2) +' &2 +' &1) =' &0)))
 
 -- This requires some work
 
-def ψ_pair (ψ_f ψ_g : BoundedArithmeticFormula 2) : BoundedArithmeticFormula 2 := ∃' ∃' ((liftAt 2 1 ψ_f) ⊓ (liftAt 2 2 ψ_g))
+def ψ_pair (ψ_f ψ_g : BoundedArithmeticFormula 2) : BoundedArithmeticFormula 2 := 
+     ∃' ∃' ((liftAt 2 1 ψ_f) ⊓ (liftAt 2 2 ψ_g))
 
 -- What we want to say is this:
 -- ψ_pair (n,m) <-> ∃k ∃l, (f(n,k) ∧ g(n,l) ∧ (k < l ∧ l * l + l = m ∨ l ≤ k ∧ k * k + k + l = m))
@@ -64,29 +67,33 @@ theorem a1 : (∃' (liftAt 1 1 ψ_succ)).Realize default ![10, 20] := by
 
 -- @[simp] lemma mylem : _ = _ := rfl
 
-lemma pair_lemma : ∀ a b ab: ℕ, a < b ∧ b * b + a = ab ∨ b ≤ a ∧ a * a + a + b = ab ↔ (Nat.pair a b) = ab := by
-    unfold Nat.pair
+lemma if_as_formula (p : Prop) [d : Decidable p] (a b : ℕ):
+    p ∧ a = ab ∨ ¬ p ∧ b = ab ↔ (if p then a else b) = ab := by
+  constructor
+  · intro h
+    cases' h with h1 h2
+    · cases' h1 with phyp eq
+      rw [if_pos phyp]
+      exact eq
+    · cases' h2 with nhyp eq
+      rw [if_neg nhyp]
+      exact eq    
+  · intro h
+    cases' em p with h1 h2
+    · left
+      rw [if_pos h1] at h
+      exact ⟨ h1, h⟩
+    · right
+      rw [if_neg h2] at h
+      exact ⟨h2, h⟩
+
+lemma pair_lemma : ∀ a b ab: ℕ, 
+    a < b ∧ b * b + a = ab ∨ b ≤ a ∧ a * a + a + b = ab ↔ 
+         (Nat.pair a b) = ab := by
     intro a b ab
-    constructor
-    · intro h
-      cases' h with h1 h2
-      · cases' h1 with l r
-        rw [if_pos l]
-        exact r
-      · cases' h2 with l r
-        have ll := Nat.not_lt.mpr l
-        rw [if_neg ll]
-        exact r
-    · intro h
-      have c := Nat.lt_or_ge a b
-      cases' c with c0 c1
-      · left
-        rw [if_pos c0] at h
-        exact ⟨c0, h⟩
-      · right
-        have ll : ¬a<b := Nat.not_lt.mpr c1
-        rw [if_neg ll] at h
-        exact ⟨c1, h⟩
+    unfold Nat.pair
+    rw [← if_as_formula]
+    rw [Nat.not_lt]
 
 theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partrec f} :
         ∃ φ : BoundedFormula L_arithmetic Empty 2, (IsSigma1 φ) ∧ ∀ m n : ℕ, φ.Realize default ![m, n] ↔ (f m = Part.some n) := by
