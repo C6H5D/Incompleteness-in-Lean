@@ -39,11 +39,24 @@ def ψ_pair (ψ_f ψ_g : BoundedArithmeticFormula 2) : BoundedArithmeticFormula 
 
 #check liftAt 3 20 ψ_succ
 
-theorem a : (∃' (liftAt 1 1 ψ_succ)).Realize default ![2, 3] := by
+theorem a0 : (∃' (liftAt 1 0 ψ_succ)).Realize default ![10, 20] := by
    rw [ψ_succ,x0,x1]
    simp
-   use 4
+   use 21
    simp
+   rw [realize_liftAt]
+   simp
+   linarith
+
+theorem a1 : (∃' (liftAt 1 1 ψ_succ)).Realize default ![10, 20] := by
+   rw [ψ_succ,x0,x1]
+   simp
+   use 11
+   simp
+   rw [realize_liftAt]
+   simp
+   linarith
+
    -- Missing rules to simplify lift
 
 
