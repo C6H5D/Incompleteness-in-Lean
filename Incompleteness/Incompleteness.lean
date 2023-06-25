@@ -87,10 +87,9 @@ lemma if_as_formula (p : Prop) [d : Decidable p] (a b : ℕ):
       rw [if_neg h2] at h
       exact ⟨h2, h⟩
 
-lemma pair_lemma : ∀ a b ab: ℕ, 
+lemma pair_lemma (a b ab: ℕ):
     a < b ∧ b * b + a = ab ∨ b ≤ a ∧ a * a + a + b = ab ↔ 
          (Nat.pair a b) = ab := by
-    intro a b ab
     unfold Nat.pair
     rw [← if_as_formula]
     rw [Nat.not_lt]
@@ -150,13 +149,13 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
           constructor
           · intro h
             cases' h with b pairing
-            rw [pair_lemma a b ab] at pairing
+            rw [pair_lemma] at pairing
             rw [← pairing]
             rw [Nat.unpair_pair a b]
           · intro h
             let b := (Nat.unpair ab).snd
             use b
-            rw [pair_lemma a b ab]
+            rw [pair_lemma]
             simp
             rw [← h]
             exact Nat.pair_unpair ab
@@ -171,13 +170,13 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
           constructor
           · intro h
             cases' h with a pairing
-            rw [pair_lemma a b ab] at pairing
+            rw [pair_lemma] at pairing
             rw [← pairing]
-            rw [Nat.unpair_pair a b]
+            rw [Nat.unpair_pair]
           · intro h
             let a := (Nat.unpair ab).fst
             use a
-            rw [pair_lemma a b ab]
+            rw [pair_lemma]
             simp
             rw [← h]
             exact Nat.pair_unpair ab
