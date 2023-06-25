@@ -31,8 +31,14 @@ def ψ_right : BoundedArithmeticFormula 2 :=
 
 -- This requires some work
 
+-- m |-> Nat.pair (f(m) g(m))
+-- ∃ a ∃ b f (m) = a ∧ g(m) = b ∧ (Nat.pair a b) = n
+-- ∃' ∃' f(&0) = &2 ∧ g(&0) = &3 ∧ (Nat.pair &2 &3) = &1
+-- ∃' ∃' ψ_f (&0, &2) ∧ ψ_g (&0, &3) ∧ (&2 < &3 ∧ &3 * &3 + &2 = &1 ∨ &3 ≤ &2 ∧ &2 * &2 + &2 + &3 = &1) 
+-- ∃' ∃' (liftAt 1 1 (liftAt 1 2 ψ_f)) ∧ (liftAt 2 1 ψ_g) ∧ (&2 < &3 ∧ &3 * &3 + &2 = &1 ∨ &3 ≤ &2 ∧ &2 * &2 + &2 + &3 = &1)
+
 def ψ_pair (ψ_f ψ_g : BoundedArithmeticFormula 2) : BoundedArithmeticFormula 2 := 
-     ∃' ∃' ((liftAt 2 1 ψ_f) ⊓ (liftAt 2 2 ψ_g))
+     ∃' ∃' (((liftAt 1 1 (liftAt 1 2 ψ_f)) ⊓ (liftAt 2 1 ψ_g)) ⊓ (((&2 <' &3) ⊓ (((&3 ⬝' &3) +' &2) =' &1)) ⊔ ((&3 ≤' &2) ⊓ (((&2 ⬝' &2) +' &2 +' &3) =' &1))))
 
 -- What we want to say is this:
 -- ψ_pair (n,m) <-> ∃k ∃l, (f(n,k) ∧ g(n,l) ∧ (k < l ∧ l * l + l = m ∨ l ≤ k ∧ k * k + k + l = m))
@@ -59,6 +65,10 @@ theorem a1 : (∃' (liftAt 1 1 ψ_succ)).Realize default ![10, 20] := by
    rw [realize_liftAt]
    simp
    linarith
+
+theorem a2 : (∃' (liftAt 1 2 ψ_succ)).Realize default ![10, 11] := by
+   rw [ψ_succ,x0,x1]
+   simp
 
    -- Missing rules to simplify lift
 
@@ -190,7 +200,30 @@ theorem part_rec_implies_sigma_one_definable {f : ℕ →. ℕ} {hf : Nat.Partre
         use ψ
         constructor
         · sorry
-        · sorry
+        · intro m n
+          simp
+          rw [ψ_pair]
+          simp
+          constructor
+          · intro h
+            cases' h with a bh
+            cases' bh with b hyp
+            rw [realize_liftAt] at hyp
+            simp at hyp
+            cases' hyp with j k
+            simp at j
+            rw [realize_liftAt] at j
+            simp at j
+            library_search
+            
+
+
+
+
+
+
+
+
 
     | comp f g _ _=> sorry
     | prec f g _ _ => sorry
